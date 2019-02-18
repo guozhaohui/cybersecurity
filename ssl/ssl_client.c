@@ -4,9 +4,9 @@
 #include <memory.h>
 #include <errno.h> 
 #include <sys/types.h>
- 
-#include <winsock2.h>
- 
+#include <sys/socket.h>
+#include <netinet/in.h>
+
 #include "openssl/rsa.h"
 #include "openssl/crypto.h"
 #include "openssl/x509.h"
@@ -15,11 +15,6 @@
 #include "openssl/err.h"
 #include "openssl/rand.h" 
 #include "openssl/bio.h"
- 
-#pragma comment(lib, "libeay32.lib")
-#pragma comment(lib, "ssleay32.lib")
-#pragma comment(lib, "ws2_32.lib")
- 
  
 /*所有需要的参数信息都在此处以#define的形式提供*/
  
@@ -48,13 +43,6 @@ int main()
 	char buf[4096];
 	const SSL_METHOD *meth;
 	int seed_int[100]; /*存放随机序列*/
-	WSADATA wsaData;
- 
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-	{
-		printf("WSAStartup()fail:%d\n", GetLastError());
-		return -1;
-	}
  
 	OpenSSL_add_ssl_algorithms();/*初始化*/
 	SSL_load_error_strings();/*为打印调试信息作准备*/
