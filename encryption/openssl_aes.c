@@ -2,7 +2,7 @@
   AES encryption/decryption demo program using OpenSSL EVP apis
   gcc -Wall openssl_aes.c -lcrypto
 
-  this is public domain code. 
+  this is public domain code.
 
   Saju Pillai (saju.pillai@gmail.com)
 **/
@@ -16,12 +16,12 @@
  * Create a 256 bit key and IV using the supplied key_data. salt can be added for taste.
  * Fills in the encryption and decryption ctx objects and returns 0 on success
  **/
-int aes_init(unsigned char *key_data, int key_data_len, unsigned char *salt, EVP_CIPHER_CTX *e_ctx, 
+int aes_init(unsigned char *key_data, int key_data_len, unsigned char *salt, EVP_CIPHER_CTX *e_ctx,
              EVP_CIPHER_CTX *d_ctx)
 {
   int i, nrounds = 5;
   unsigned char key[32], iv[32];
-  
+
   /*
    * Gen key & IV for AES 256 CBC mode. A SHA1 digest is used to hash the supplied key material.
    * nrounds is the number of times the we hash the material. More rounds are more secure but
@@ -73,7 +73,7 @@ unsigned char *aes_decrypt(EVP_CIPHER_CTX *e, unsigned char *ciphertext, int *le
   /* plaintext will always be equal to or lesser than length of ciphertext*/
   int p_len = *len, f_len = 0;
   unsigned char *plaintext = malloc(p_len);
-  
+
   EVP_DecryptInit_ex(e, NULL, NULL, NULL, NULL);
   EVP_DecryptUpdate(e, plaintext, &p_len, ciphertext, *len);
   EVP_DecryptFinal_ex(e, plaintext+p_len, &f_len);
@@ -89,20 +89,20 @@ int main(int argc, char **argv)
   EVP_CIPHER_CTX en, de;
 
   /* 8 bytes to salt the key_data during key generation. This is an example of
-     compiled in salt. We just read the bit pattern created by these two 4 byte 
-     integers on the stack as 64 bits of contigous salt material - 
+     compiled in salt. We just read the bit pattern created by these two 4 byte
+     integers on the stack as 64 bits of contigous salt material -
      ofcourse this only works if sizeof(int) >= 4 */
   unsigned int salt[] = {12345, 54321};
   unsigned char *key_data;
   int key_data_len, i;
-  char *input[] = {"a", "abcd", "this is a test", "this is a bigger test", 
+  char *input[] = {"a", "abcd", "this is a test", "this is a bigger test",
                    "\nWho are you ?\nI am the 'Doctor'.\n'Doctor' who ?\nPrecisely!",
                    NULL};
 
   /* the key_data is read from the argument list */
   key_data = (unsigned char *)argv[1];
   key_data_len = strlen(argv[1]);
-  
+
   /* gen key and iv. init the cipher ctx object */
   if (aes_init(key_data, key_data_len, (unsigned char *)&salt, &en, &de)) {
     printf("Couldn't initialize AES cipher\n");
@@ -114,21 +114,21 @@ int main(int argc, char **argv)
     char *plaintext;
     unsigned char *ciphertext;
     int olen, len;
-    
-    /* The enc/dec functions deal with binary data and not C strings. strlen() will 
+
+    /* The enc/dec functions deal with binary data and not C strings. strlen() will
        return length of the string without counting the '\0' string marker. We always
-       pass in the marker byte to the encrypt/decrypt functions so that after decryption 
+       pass in the marker byte to the encrypt/decrypt functions so that after decryption
        we end up with a legal C string */
     olen = len = strlen(input[i])+1;
-    
+
     ciphertext = aes_encrypt(&en, (unsigned char *)input[i], &len);
     plaintext = (char *)aes_decrypt(&de, ciphertext, &len);
 
-    if (strncmp(plaintext, input[i], olen)) 
+    if (strncmp(plaintext, input[i], olen))
       printf("FAIL: enc/dec failed for \"%s\"\n", input[i]);
-    else 
+    else
       printf("OK: enc/dec ok for \"%s\"\n", plaintext);
-    
+
     free(ciphertext);
     free(plaintext);
   }
@@ -138,4 +138,4 @@ int main(int argc, char **argv)
 
   return 0;
 }
-  
+
