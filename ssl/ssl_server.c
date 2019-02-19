@@ -2,9 +2,18 @@
 #include <stdlib.h> 
 #include <memory.h> 
 #include <errno.h> 
-#include <sys/types.h> 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
  
-#include <winsock2.h>
+#if defined(_WIN32) || defined(__CYGWIN__)
+// Name clashes between windows.h and openssl
+#undef X509_NAME
+#undef X509_CERT_PAIR
+#undef X509_EXTENSIONS
+#undef OCSP_REQUEST
+#undef OCSP_RESPONSE
+#endif
  
 #include "openssl/rsa.h"
 #include "openssl/rsa.h"
@@ -46,14 +55,6 @@ int main()
 	char* str;
 	char buf[4096];
 	const SSL_METHOD *meth;
- 
-	WSADATA wsaData;
- 
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-	{
-		printf("WSAStartup()fail:%dn", GetLastError());
-		return -1;
-	}
  
 	SSL_load_error_strings();/*为打印调试信息作准备*/
  
