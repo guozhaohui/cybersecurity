@@ -1,4 +1,4 @@
-SUBDIRS = tcp udp ssl encryption
+SUBDIRS = tcp udp ssl encryption digest
 
 install-dirs = $(patsubst %,install-%,$(SUBDIRS))
 clean-dirs = $(patsubst %,clean-%,$(SUBDIRS))
