@@ -1,6 +1,8 @@
 include ../common.mk
 
 PROGS = digest
+.PHONY: all
+all: $(PROGS)
 
 SRCS = digest.c
 
@@ -11,6 +13,4 @@ LDFLAGS += -lssl -lcrypto
 digest: $(OBJS)
 	$(CC) -o $@ $< $(LDFLAGS)
 
-all: $(PROGS)
 
-.PHONY: all

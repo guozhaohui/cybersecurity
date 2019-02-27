@@ -1,6 +1,8 @@
 include ../common.mk
 
 PROGS = udp_client udp_server
+.PHONY: all
+all: $(PROGS)
 
 udp_client_SRCS = udp_client.c
 udp_server_SRCS = udp_server.c
@@ -14,6 +16,3 @@ udp_client: $(udp_client_OBJS)
 udp_server: $(udp_server_OBJS)
 	$(CC) -o $@ $< $(LDFLAGS)
 
-all: $(PROGS)
-
-.PHONY: all

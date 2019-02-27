@@ -1,6 +1,8 @@
 include ../common.mk
 
 PROGS = tcp_client tcp_server
+.PHONY: all
+all: $(PROGS)
 
 tcp_client_SRCS = tcp_client.c
 tcp_server_SRCS = tcp_server.c
@@ -14,6 +16,3 @@ tcp_client: $(tcp_client_OBJS)
 tcp_server: $(tcp_server_OBJS)
 	$(CC) -o $@ $< $(LDFLAGS)
 
-all: $(PROGS)
-
-.PHONY: all

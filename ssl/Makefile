@@ -1,6 +1,8 @@
 include ../common.mk
 
 PROGS = ssl_client ssl_server
+.PHONY: all
+all: $(PROGS)
 
 ssl_client_SRCS = ssl_client.c
 ssl_server_SRCS = ssl_server.c
@@ -16,6 +18,4 @@ ssl_client: $(ssl_client_OBJS)
 ssl_server: $(ssl_server_OBJS)
 	$(CC) -o $@ $< $(LDFLAGS)
 
-all: $(PROGS)
 
-.PHONY: all
